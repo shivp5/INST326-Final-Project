@@ -1,6 +1,6 @@
 # Group Members: Shiv Patel & Nuri Tadayon
 # Project Topic: UMD Football Food Vendor Database
-#Assignment: INST 326 Final Project 
+# Assignment: INST 326 Final Project 
 
 """UMD Football Food Vendor Database Final Project.
 
@@ -96,6 +96,76 @@ class DataManager:
             for purchase in self.purchase_list:
                 print(purchase.item_sold + " - " + purchase.vendor_name + " - " + purchase.game_opponent + " - Quantity: " + str(purchase.amount_sold))
 
+    def show_vendors(self):
+        """Shows all the vednors and their average ratings."""
+        if len(self.vendor_list) == 0:
+            print("No vendors added.")
+        else:
+            # loops through each vendor and shows its info
+            for vendor in self.vendor_list:
+                avg = vendor.average_rating()
+                if avg == 0:
+                    print(vendor.vendor_name + " - " + vendor.vendor_location + " - No ratings yet")
+
+                else:
+                    print(vendor.vendor_name + " - " + vendor.vendor_location + " - Rating: " + str(avg))
+
+    def show_food_items(self):
+        """Shows all the food items."""
+        if len(self.food_items) == 0:
+            print("No food items added.")
+        else: 
+            for item in self.food_items:
+                print(item.item_name + " - " + item.item_category + " - $" + str(item.item_price)+ " - " + item.vendor_name)
+
+    def show_games(self):
+        """Prints all the games."""
+        if len(self.game_list) == 0:
+            print("No games added.")
+        else: 
+            for game in self.game_list:
+                print("vs " + game.opposite_team + " - " + game.game_date)
+
+    def rate_vendor(self, vendor_name, rating):
+        """ Allows to rate a vendor by the name."""
+        found = False
+        for vendor in self.vendor_list:
+            if vendor.vendor_name == vendor_name:
+                vendor.add_rating(rating)
+                found = True
+        if found == False:
+            print("Vendor not found.")
+        
+    def sales_by_game(self, opponent):
+        """Shows the total number of items sold at a football game."""
+        total = 0
+        for purchase in self.purchase_list:
+            if purchase.game_opponent == opponent:
+                total = total + purchase.amount_sold
+        print("Total items sold vs " + opponent + ": " + str(total))
+
+    def top_selling_item(self):
+        """Shows which of the items got sold the most."""
+        if len(self.purchase_list) == 0:
+            print("No purchases have been recorded.")
+        else:
+            # makes a dictonary to count the sales for each item
+            sales_count = {}
+            for purchase in self.purchase_list:
+                if purchase.item_sold in sales_count:
+                    sales_count[purchase.item_sold] = sales_count[purchase.item_sold] + purchase.amount_sold
+                else:
+                    sales_count[purchase.item_sold] = purchase.amount_sold
+                # finds the item with the highest count
+            best_item = ""
+            best_amount = 0
+            for item in sales_count:
+                if sales_count[item] > best_amount:
+                    best_amount = sales_count[item]
+                    best_item = item
+            print("Top selling item: " + best_item + " with " + str(best_amount) + " sold")
+
+                
 def main():
     """Runs the command-line menu."""
 
@@ -109,7 +179,13 @@ def main():
         print("3. Add game")
         print("4. Record purchase")
         print("5. Show purchases")
-        print("6. Exit")
+        print("6. Show vendors")
+        print("7. Show food items")
+        print("8. Show games")
+        print("9. Rate vendor")
+        print("10. Sales by game")
+        print("11. Top selling item")
+        print("12. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -151,10 +227,32 @@ def main():
             manager.show_purchases()
 
         elif choice == "6":
+            manager.show_vendors()
+
+        elif choice == "7":
+            manager.show_food_items()
+
+        elif choice == "8":
+            manager.show_games()
+
+        elif choice == "9":
+            vendor_name = input("Vendor name: ")
+            rating = input("Rating (1-5): ")
+            rating = float(rating)
+            manager.rate_vendor(vendor_name, rating)
+            print("Rating added.")
+
+        elif choice == "10":
+            opponent = input("Opponent name: ")
+            manager.sales_by_game(opponent)
+
+        elif choice == "11":
+            manager.top_selling_item()
+
+        elif choice == "12":
             print("Bye.")
-            checker = False 
-        else: 
-            print("Invalid choice.")
+            checker = False
+
 
 if __name__ == "__main__":
     main()
