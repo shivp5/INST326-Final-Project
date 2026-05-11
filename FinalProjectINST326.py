@@ -97,7 +97,7 @@ class DataManager:
                 print(purchase.item_sold + " - " + purchase.vendor_name + " - " + purchase.game_opponent + " - Quantity: " + str(purchase.amount_sold))
 
     def show_vendors(self):
-        """Shows all the vednors and their average ratings."""
+        """Shows all the vendors and their average ratings."""
         if len(self.vendor_list) == 0:
             print("No vendors added.")
         else:
@@ -149,7 +149,7 @@ class DataManager:
         if len(self.purchase_list) == 0:
             print("No purchases have been recorded.")
         else:
-            # makes a dictonary to count the sales for each item
+            # makes a dictionary to count the sales for each item
             sales_count = {}
             for purchase in self.purchase_list:
                 if purchase.item_sold in sales_count:
